@@ -1,4 +1,4 @@
-import Config from "../assets/config.json";
+import Config from "../assets/config.js";
 
 export default class StoryController {
   get({ states, category } = {}, query) {
