@@ -1,12 +1,12 @@
-import {Router} from "express";
+import { Router } from "express";
 
-export default function StoryRoutes(StoryController) {
-      const router = Router();
+export default function StoryRoutes(StoryController, StoryMiddleware) {
+  const router = Router();
 
-      router.get("/", StoryController.getStories);
-      router.get("/:id", StoryController.getStory);
-      router.post("/", StoryController.createStory);
-      router.put("/:id", StoryController.updateStory);
+  router.get("/", StoryController.getStories);
+  router.get("/:id", StoryController.getStory);
+  router.post("/", StoryMiddleware.validation, StoryController.createStory);
+  router.put("/:id", StoryMiddleware.validation, StoryController.updateStory);
 
-      return router;
+  return router;
 }
