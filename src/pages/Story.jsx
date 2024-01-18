@@ -292,7 +292,7 @@ export default function Story({ controller }) {
                       ) : (
                         <>
                           <button
-                            className="px-2 py-1 rounded-lg bg-yellow-400 text-gray-800"
+                            className="px-2 py-1 rounded-lg bg-red-500 text-white"
                             onClick={() => {
                               const deleted = chapters.filter(
                                 (_, ti) => ti !== i

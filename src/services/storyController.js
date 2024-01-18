@@ -3,9 +3,11 @@ import Config from "../assets/config.js";
 export default class StoryController {
   get({ states, category } = {}, query) {
     return fetch(
-      `${Config.base_url}?${states !== "none" ? `states=${states}&` : ""}${
-        category !== "none" ? `category=${category}&` : ""
-      }${query ? `q=${query}` : ""}`
+      `${Config.base_url}?${
+        states !== "none" && states ? `states=${states}&` : ""
+      }${category !== "none" && category ? `category=${category}&` : ""}${
+        query ? `q=${query}` : ""
+      }`
     )
       .then((response) => response.json())
       .then((response) => {
