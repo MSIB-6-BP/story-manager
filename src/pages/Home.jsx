@@ -179,8 +179,23 @@ export default function Home({ controller }) {
                   <td className="text-center border-2">{story.title}</td>
                   <td className="text-center border-2">{story.author}</td>
                   <td className="text-center border-2">{story.category}</td>
-                  <td className="text-center border-2">{story.tags}</td>
-                  <td className="text-center border-2">{story.states}</td>
+                  <td className="text-center border-2">
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {story.tags.map((tag, i) => (
+                        <div
+                          key={i}
+                          className="px-2 py-1 rounded-lg bg-slate-200"
+                        >
+                          {tag}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="text-center border-2 px-1">
+                    <div className="px-2 py-1 rounded-lg bg-slate-200">
+                      {story.states}
+                    </div>
+                  </td>
                   <td className="text-center border py-1 flex justify-center gap-2">
                     <button
                       className="px-2 py-1 rounded-lg bg-blue-500 text-white"
@@ -192,7 +207,7 @@ export default function Home({ controller }) {
                         setView("story");
                       }}
                     >
-                      Show
+                      Detail
                     </button>
                     <button
                       className="px-2 py-1 rounded-lg bg-yellow-400 text-gray-800"

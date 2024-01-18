@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useContext, useEffect } from "react";
 import {
   ActiveStory,
@@ -11,7 +12,6 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Aside from "../components/Aside";
 
-// eslint-disable-next-line react/prop-types
 export default function Story({ controller }) {
   const [activeStory, setActiveStory] = useContext(ActiveStory);
   const setActiveChapter = useContext(ActiveChapter)[1];
@@ -57,14 +57,24 @@ export default function Story({ controller }) {
       title: <p>There is a missing value</p>,
     });
   };
+  const showInvalidValue = () => {
+    withReactContent(Swal).fire({
+      title: <p>There is a invalid value</p>,
+    });
+  };
+  const showConfirmation = () => {
+    return withReactContent(Swal).fire({
+      title: <p>Are you sure you want to cancel adding the story without saving the data?</p>,
+      showCancelButton: true,
+    });
+  };
   const save = async () => {
     if (title === "" || author === "" || synopsis === "" || coverImage === "") {
       showError();
       return;
     }
     if (activeStory < 0) {
-      // eslint-disable-next-line react/prop-types
-      await controller.create({
+      const result = await controller.create({
         title,
         author,
         synopsis,
@@ -74,9 +84,12 @@ export default function Story({ controller }) {
         tags,
         chapters,
       });
+      if (result.status !== "OK") {
+        showInvalidValue();
+        return;
+      }
     } else {
-      // eslint-disable-next-line react/prop-types
-      await controller.update(activeStory, {
+      const result = await controller.update(activeStory, {
         title,
         author,
         synopsis,
@@ -86,14 +99,21 @@ export default function Story({ controller }) {
         tags,
         chapters,
       });
-      console.log(states);
+      if (result.status !== "OK") {
+        showInvalidValue();
+        return;
+      }
       setActiveStory(-1);
     }
     setStoryField({});
     setChapters([]);
     setView("home");
   };
-  const cancel = () => {
+  const cancel = async () => {
+    const res = await showConfirmation();
+    if (res.isDismissed) {
+      return;
+    }
     setActiveStory(-1);
     setStoryField({});
     setChapters([]);
@@ -255,7 +275,7 @@ export default function Story({ controller }) {
                     <td className="text-center border-2">
                       {chapter.lastUpdated.toISOString()}
                     </td>
-                    <td className="text-center border-2 py-1">
+                    <td className="text-center border-2 py-1 flex justify-center gap-2">
                       {readOnly ? (
                         <button
                           className="px-2 py-1 bg-blue-500 text-white rounded-lg"
@@ -267,22 +287,35 @@ export default function Story({ controller }) {
                             setView("chapter");
                           }}
                         >
-                          Show
+                          Detail
                         </button>
                       ) : (
-                        <button
-                          className="px-2 py-1 rounded-lg bg-yellow-400 text-gray-800"
-                          onClick={() => {
-                            setActiveChapter(i);
-                            setStoryField({
-                              ...storyField,
-                              chapter: chapters[i],
-                            });
-                            setView("chapter");
-                          }}
-                        >
-                          Edit
-                        </button>
+                        <>
+                          <button
+                            className="px-2 py-1 rounded-lg bg-yellow-400 text-gray-800"
+                            onClick={() => {
+                              const deleted = chapters.filter(
+                                (_, ti) => ti !== i
+                              );
+                              setChapters(deleted);
+                            }}
+                          >
+                            Delete
+                          </button>
+                          <button
+                            className="px-2 py-1 rounded-lg bg-yellow-400 text-gray-800"
+                            onClick={() => {
+                              setActiveChapter(i);
+                              setStoryField({
+                                ...storyField,
+                                chapter: chapters[i],
+                              });
+                              setView("chapter");
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </>
                       )}
                     </td>
                   </tr>
