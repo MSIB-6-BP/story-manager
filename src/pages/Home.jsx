@@ -10,7 +10,6 @@ import {
 import Modal from "../components/Modal";
 import Aside from "../components/Aside";
 
-// eslint-disable-next-line react/prop-types
 export default function Home({ controller }) {
   const setActiveStory = useContext(ActiveStory)[1];
   const setView = useContext(ViewContext)[1];
@@ -27,15 +26,7 @@ export default function Home({ controller }) {
   const [showFilter, setShowFilter] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react/prop-types
-    controller.get().then((response) => {
-      setStories(response);
-    });
-  }, [controller]);
-
-  useEffect(() => {
     controller
-      // eslint-disable-next-line react/prop-types
       .get(
         {
           category: filterCategory,
