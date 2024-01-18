@@ -12,10 +12,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const storyApp = StoryRoutes(new StoryController(new StoryRepo()), new StoryMiddleware());
+const storyApp = StoryRoutes(
+  new StoryController(new StoryRepo()),
+  new StoryMiddleware()
+);
 
 if (process.env.NODE_ENV === "production") {
-  app.get("*", express.static("dist"));
+  app.get("*", express.static("public"));
 } else {
   dotenv.config();
 }
